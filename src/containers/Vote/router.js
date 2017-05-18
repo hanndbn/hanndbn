@@ -1,9 +1,12 @@
 import React from 'react';
-import App from './containers/App/App';
-import {Router, Route, hashHistory, IndexRoute} from 'react-router';
-import Home from './containers/Home/Home';
-Router.prototype.componentWillReceiveProps = function(nextProps) {
+import App from '../Vote/App';
+import PollList from '../Vote/Pages/PollList';
+import SinglePoll from '../Vote/Pages/SinglePoll';
+import {Router, Route, browserHistory, IndexRoute} from 'react-router';
+
+Router.prototype.componentWillReceiveProps = function (nextProps) {
     let components = [];
+
     function grabComponents(element) {
         // This only works for JSX routes, adjust accordingly for plain JS config
         if (element.props && element.props.component) {
@@ -13,13 +16,15 @@ Router.prototype.componentWillReceiveProps = function(nextProps) {
             React.Children.forEach(element.props.children, grabComponents);
         }
     }
+
     grabComponents(nextProps.routes || nextProps.children);
     components.forEach(React.createElement); // force patching
 };
 export default (
-    <Router history={hashHistory}>
+    <Router history={browserHistory}>
         <Route path="/" components={App}>
-            <IndexRoute components={Home}/>
+            <Route path="/pollDetail" components={SinglePoll}/>
+            <IndexRoute components={PollList}/>
         </Route>
     </Router>
 );
